@@ -15,9 +15,10 @@ import MenuItem from '@mui/material/MenuItem';
 import SearchIcon from '@mui/icons-material/Search';
 import { styled, alpha } from '@mui/material/styles';
 import InputBase from '@mui/material/InputBase';
+import Link from 'next/link';
 
-const pages = [{name:'Playlist', link:'playlist'}, {name:'Likes', link: 'like'}, {name: 'Upload', link:'upload'}];
-const settings = [{name:'Profile', link:'Profile'}, {name:'Account', link:'Account'}, {name:'Dashboard', link:'Dashboard'}, {name:'Logout', link:'Logout'}];
+const pages = [{ name: 'Playlist', link: 'playlist' }, { name: 'Likes', link: 'like' }, { name: 'Upload', link: 'upload' }];
+const settings = [{ name: 'Profile', link: 'profile' }, { name: 'Account', link: 'account' }, { name: 'Dashboard', link: 'dashboard' }, { name: 'Logout', link: 'logout' }];
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -82,7 +83,7 @@ function AppHeader() {
   };
 
   return (
-    <AppBar position="static" sx={{background:'#5c6d7e'}}>
+    <AppBar position="static" sx={{ background: '#5c6d7e' }}>
       <Container maxWidth="xl">
         <Toolbar disableGutters >
           <Box sx={{ flexGrow: 1, display: 'flex', alignItems: 'center' }}>
@@ -139,7 +140,9 @@ function AppHeader() {
               >
                 {pages.map((page) => (
                   <MenuItem key={page.name} onClick={handleCloseNavMenu}>
-                    <Typography textAlign="center">{page.name}</Typography>
+                    <Typography textAlign="center">
+                      <Link href={`/${page.link}`} style={{ textDecoration: 'none', color: 'white' }}>{page.name}</Link>
+                    </Typography>
                   </MenuItem>
                 ))}
               </Menu>
@@ -164,9 +167,15 @@ function AppHeader() {
                 <Button
                   key={page.name}
                   onClick={handleCloseNavMenu}
-                  sx={{ my: 2, color: 'white', display: 'block'}}
+                  sx={{ my: 2, color: 'white', display: 'block' }}
                 >
-                  {page.name}
+                  <Link
+                    href={`/${page.link}`}
+                    style={{ textDecoration: 'none', color: 'white' }}
+                    className={`link ${pathname === `/${page.link}` ? 'active' : ''}`}
+                  >
+                    {page.name}
+                  </Link>
                 </Button>
               ))}
             </Box>
@@ -197,7 +206,9 @@ function AppHeader() {
             >
               {settings.map((setting) => (
                 <MenuItem key={setting.name} onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center">{setting.name}</Typography>
+                  <Typography textAlign="center">
+                    <Link href={`/${setting.link}`} style={{ textDecoration: 'none', color: 'initial' }}>{setting.name}</Link>
+                  </Typography>
                 </MenuItem>
               ))}
             </Menu>
