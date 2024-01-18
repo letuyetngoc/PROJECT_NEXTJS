@@ -16,6 +16,8 @@ import SearchIcon from '@mui/icons-material/Search';
 import { styled, alpha } from '@mui/material/styles';
 import InputBase from '@mui/material/InputBase';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation'
+import { useRouter } from 'next/navigation';
 
 const pages = [{ name: 'Playlist', link: 'playlist' }, { name: 'Likes', link: 'like' }, { name: 'Upload', link: 'upload' }];
 const settings = [{ name: 'Profile', link: 'profile' }, { name: 'Account', link: 'account' }, { name: 'Dashboard', link: 'dashboard' }, { name: 'Logout', link: 'logout' }];
@@ -64,6 +66,8 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 function AppHeader() {
+  const pathname = usePathname()
+  const router = useRouter()
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
 
@@ -103,6 +107,7 @@ function AppHeader() {
                 color: 'inherit',
                 textDecoration: 'none',
               }}
+              onClick={() => router.push('/')}
             >
               SoundCloud
             </Typography>
@@ -171,8 +176,7 @@ function AppHeader() {
                 >
                   <Link
                     href={`/${page.link}`}
-                    style={{ textDecoration: 'none', color: 'white' }}
-                    className={`link ${pathname === `/${page.link}` ? 'active' : ''}`}
+                    style={{ textDecoration: pathname === `/${page.link}` ? 'underline' : 'none', color: pathname === `/${page.link}` ? '#f50' : '#ccc' }}
                   >
                     {page.name}
                   </Link>
@@ -207,7 +211,12 @@ function AppHeader() {
               {settings.map((setting) => (
                 <MenuItem key={setting.name} onClick={handleCloseUserMenu}>
                   <Typography textAlign="center">
-                    <Link href={`/${setting.link}`} style={{ textDecoration: 'none', color: 'initial' }}>{setting.name}</Link>
+                    <Link
+                      href={`/${setting.link}`}
+                      style={{ textDecoration: pathname === `/${setting.link}` ? 'underline' : 'none', color: pathname === `/${setting.link}` ? '#f50' : 'initial' }}
+                    >
+                      {setting.name}
+                    </Link>
                   </Typography>
                 </MenuItem>
               ))}
