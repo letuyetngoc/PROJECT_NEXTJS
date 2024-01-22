@@ -5,19 +5,29 @@ import * as React from 'react';
 
 export default async function HomePage() {
 
-  const res = await sendRequest<IBackendRes<ITrackTop[]>>({
+  const chill = await sendRequest<IBackendRes<ITrackTop[]>>({
     url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tracks/top`,
     method: 'POST',
-    body: {
-      'category': 'CHILL',
-      'limit': 1
-    },
+    body: { 'category': 'CHILL', 'limit': 10 },
   })
+
+  const workouts = await sendRequest<IBackendRes<ITrackTop[]>>({
+    url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tracks/top`,
+    method: 'POST',
+    body: { 'category': 'WORKOUT', 'limit': 10 },
+  })
+
+  const party = await sendRequest<IBackendRes<ITrackTop[]>>({
+    url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tracks/top`,
+    method: 'POST',
+    body: { 'category': 'PARTY', 'limit': 10 },
+  })
+
   return (
-    <Container maxWidth="xl">
-      <MainContent />
-      <MainContent />
-      <MainContent />
-          </Container>
+    <Container maxWidth="xl" sx={{marginBottom:'200px'}}>
+      <MainContent data={chill?.data ?? []} title='CHILL' />
+      <MainContent data={workouts?.data ?? []} title='WORKOUT' />
+      <MainContent data={party?.data ?? []} title='PARTY' />
+    </Container>
   );
 }

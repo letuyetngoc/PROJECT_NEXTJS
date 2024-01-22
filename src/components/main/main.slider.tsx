@@ -28,7 +28,8 @@ function SampleNextArrow(props: any) {
                 padding: 0
             }}
             onClick={onClick}
-            variant="outlined"
+            variant="contained"
+            color='inherit'
         >
             <ChevronRightIcon />
         </Button >
@@ -51,14 +52,19 @@ function SamplePrevArrow(props: any) {
                 zIndex: 2
             }}
             onClick={onClick}
-            variant="outlined"
+            variant="contained"
+            color='inherit'
         >
             <ChevronLeftIcon />
         </Button >
     );
 }
 
-export default function MainContent() {
+interface IMainContent {
+    data: ITrackTop[],
+    title: string
+}
+export default function MainContent(props: IMainContent) {
     const settings: Settings = {
         dots: false,
         infinite: false,
@@ -96,35 +102,18 @@ export default function MainContent() {
         ]
     };
     return (
-        <Container >
-            <h2> Multiple tracks </h2>
+        <Container>
+            <h2>{props.title}</h2>
             <Slider {...settings}>
-                <div>
-                    <TrackItem />
-                </div>
-                <div>
-                    <TrackItem />
-                </div>
-                <div>
-                    <TrackItem />
-                </div>
-                <div>
-                    <TrackItem />
-                </div>
-                <div>
-                    <TrackItem />
-                </div>
-                <div>
-                    <TrackItem />
-                </div>
-                <div>
-                    <TrackItem />
-                </div>
-                <div>
-                    <TrackItem />
-                </div>
+                {props.data.map((track) => {
+                    return (
+                        <div key={track._id}>
+                            <TrackItem track={track} />
+                        </div>
+                    )
+                })}
             </Slider>
-            <Divider sx={{mt:2}}/>
+            <Divider sx={{ mt: 2 }} />
         </Container >
     )
 }
@@ -144,23 +133,30 @@ const ExpandMore = styled((props: ExpandMoreProps) => {
         duration: theme.transitions.duration.shortest,
     }),
 }));
-
-function TrackItem() {
-
+interface ITrackItem {
+    track: ITrackTop
+}
+function TrackItem(props: ITrackItem) {
     return (
-        <Card sx={{ maxWidth: 200 }}>
+        <Card sx={{ maxWidth: 200, cursor:'pointer' }}>
             <CardMedia
                 component="img"
                 height="150"
-                image="https://picsum.photos/id/1/200/300"
+                image={`${process.env.NEXT_PUBLIC_BACKEND_URL}/images/${props.track.imgUrl}`}
                 alt="track image"
             />
             <CardContent>
-                <Typography variant="h6" color="text.secondary">
-                    Dance Energy
+                <Typography variant="h6" color="text.secondary"
+                    sx={{
+                        overflow: 'hidden',
+                        whiteSpace: 'nowrap',
+                        textOverflow: 'ellipsis'
+                    }}
+                >
+                    {props.track.title}
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
-                    Dance Energy
+                    {props.track.description}
                 </Typography>
             </CardContent>
         </Card>
