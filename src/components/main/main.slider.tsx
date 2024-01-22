@@ -147,7 +147,7 @@ function TrackItem(props: ITrackItem) {
                 alt="track image"
             />
             <CardContent>
-                <Link href={`track/${props.track._id}`}>
+                <Link href={`track/${props.track._id}?audio=${props.track.trackUrl}`}>
                     <Typography variant="h6" color="text.secondary"
                         sx={{
                             overflow: 'hidden',
