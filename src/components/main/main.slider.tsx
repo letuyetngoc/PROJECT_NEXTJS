@@ -12,6 +12,7 @@ import Typography from '@mui/material/Typography';
 import { Button, Container, Divider } from '@mui/material';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import Link from 'next/link';
 
 function SampleNextArrow(props: any) {
     const { onClick } = props;
@@ -138,7 +139,7 @@ interface ITrackItem {
 }
 function TrackItem(props: ITrackItem) {
     return (
-        <Card sx={{ maxWidth: 200, cursor:'pointer' }}>
+        <Card sx={{ maxWidth: 200, cursor: 'pointer' }}>
             <CardMedia
                 component="img"
                 height="150"
@@ -146,15 +147,17 @@ function TrackItem(props: ITrackItem) {
                 alt="track image"
             />
             <CardContent>
-                <Typography variant="h6" color="text.secondary"
-                    sx={{
-                        overflow: 'hidden',
-                        whiteSpace: 'nowrap',
-                        textOverflow: 'ellipsis'
-                    }}
-                >
-                    {props.track.title}
-                </Typography>
+                <Link href={`track/${props.track._id}`}>
+                    <Typography variant="h6" color="text.secondary"
+                        sx={{
+                            overflow: 'hidden',
+                            whiteSpace: 'nowrap',
+                            textOverflow: 'ellipsis'
+                        }}
+                    >
+                        {props.track.title}
+                    </Typography>
+                </Link>
                 <Typography variant="body2" color="text.secondary">
                     {props.track.description}
                 </Typography>
