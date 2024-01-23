@@ -50,15 +50,15 @@ export default function DetailTrackPage() {
     })
 
     // Hover effect
-    // useEffect(() => {
-    //     const handlePointerMove = (e:any) => {
-    //         hoverRef.current!.style.width = `${e.offsetX}px`
-    //     }
-    //     trackRef.current!.addEventListener('pointermove', handlePointerMove)
-    //     return () => {
-    //         trackRef.current!.removeEventListener('pointermove', handlePointerMove)
-    //     }
-    // }, [])
+    useEffect(() => {
+        const handlePointerMove = (e: any) => {
+            hoverRef.current!.style.width = `${e.offsetX}px`
+        }
+        trackRef.current!.addEventListener('pointermove', handlePointerMove)
+        return () => {
+            trackRef.current!.removeEventListener('pointermove', handlePointerMove)
+        }
+    }, [])
 
     const onPlayPause = useCallback(() => {
         wavesurfer && wavesurfer.playPause()
@@ -81,8 +81,15 @@ export default function DetailTrackPage() {
     //
 
     return (
-        <Container maxWidth="xl" sx={{ position: 'relative' }}>
+        <Container maxWidth="xl">
             <Box ref={trackRef} sx={{
+                position: 'relative',
+                cursor: 'pointer',
+                "&:hover": {
+                    "& .trackHover": {
+                        opacity: "1",
+                    }
+                },
                 ".time": {
                     position: 'absolute',
                     zIndex: 11,
@@ -97,7 +104,7 @@ export default function DetailTrackPage() {
             }}>
                 <Box ref={timeRef} className="time" sx={{ left: 0 }}>0:00</Box>
                 <Box ref={durationRef} className="time" sx={{ right: 0 }}>0:00</Box>
-                {/* <Box ref={hoverRef} sx={{
+                <Box ref={hoverRef} className="trackHover" sx={{
                     position: 'absolute',
                     left: 0,
                     top: 0,
@@ -109,7 +116,7 @@ export default function DetailTrackPage() {
                     background: 'rgba(255, 255, 255, 0.5)',
                     opacity: 0,
                     transition: 'opacity 0.2s ease',
-                }}></Box> */}
+                }}></Box>
             </Box>
             <button onClick={onPlayPause}>{isPlaying ? 'Pause' : 'Play'}</button>
         </Container>
