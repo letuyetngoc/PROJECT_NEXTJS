@@ -5,6 +5,7 @@ import { useWavesurfer } from '@wavesurfer/react'
 import { Box, Container } from '@mui/material'
 
 export default function DetailTrackPage() {
+
     const trackRef = useRef<HTMLDivElement>(null)
     const durationRef = useRef<HTMLDivElement>(null)
     const hoverRef = useRef<HTMLDivElement>(null)
@@ -13,38 +14,43 @@ export default function DetailTrackPage() {
     const searchParams = useSearchParams()
     const audio = searchParams.get('audio')
 
-    const canvas = document.createElement('canvas')
-    const ctx = canvas.getContext('2d')!
+    let gradient, progressGradient
 
-    // Define the waveform gradient
-    const gradient: CanvasGradient = useMemo(() => {
-        const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height * 1)
-        gradient.addColorStop(0, '#656666') // Top color
-        gradient.addColorStop((canvas.height * 0.7) / canvas.height, '#656666') // Top color
-        gradient.addColorStop((canvas.height * 0.7 + 1) / canvas.height, '#ffffff') // White line
-        gradient.addColorStop((canvas.height * 0.7 + 2) / canvas.height, '#ffffff') // White line
-        gradient.addColorStop((canvas.height * 0.7 + 3) / canvas.height, '#B1B1B1') // Bottom color
-        gradient.addColorStop(1, '#B1B1B1') // Bottom color
-        return gradient
-    }, [])
+    if (typeof window !== "undefined") {
+        const canvas = document.createElement('canvas')
+        const ctx = canvas.getContext('2d')!
 
-    // Define the progress gradient
-    const progressGradient: CanvasGradient = useMemo(() => {
-        const progressGradient = ctx.createLinearGradient(0, 0, 0, canvas.height * 1)
-        progressGradient.addColorStop(0, '#EE772F') // Top color
-        progressGradient.addColorStop((canvas.height * 0.7) / canvas.height, '#EB4926') // Top color
-        progressGradient.addColorStop((canvas.height * 0.7 + 1) / canvas.height, '#ffffff') // White line
-        progressGradient.addColorStop((canvas.height * 0.7 + 2) / canvas.height, '#ffffff') // White line
-        progressGradient.addColorStop((canvas.height * 0.7 + 3) / canvas.height, '#F6B094') // Bottom color
-        progressGradient.addColorStop(1, '#F6B094') // Bottom color
-        return progressGradient
-    }, [])
+        // Define the waveform gradient
+        gradient = useMemo(() => {
+            const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height * 1)
+            gradient.addColorStop(0, '#656666') // Top color
+            gradient.addColorStop((canvas.height * 0.7) / canvas.height, '#656666') // Top color
+            gradient.addColorStop((canvas.height * 0.7 + 1) / canvas.height, '#ffffff') // White line
+            gradient.addColorStop((canvas.height * 0.7 + 2) / canvas.height, '#ffffff') // White line
+            gradient.addColorStop((canvas.height * 0.7 + 3) / canvas.height, '#B1B1B1') // Bottom color
+            gradient.addColorStop(1, '#B1B1B1') // Bottom color
+            return gradient
+        }, [])
+
+        // Define the progress gradient
+        progressGradient = useMemo(() => {
+            const progressGradient = ctx.createLinearGradient(0, 0, 0, canvas.height * 1)
+            progressGradient.addColorStop(0, '#EE772F') // Top color
+            progressGradient.addColorStop((canvas.height * 0.7) / canvas.height, '#EB4926') // Top color
+            progressGradient.addColorStop((canvas.height * 0.7 + 1) / canvas.height, '#ffffff') // White line
+            progressGradient.addColorStop((canvas.height * 0.7 + 2) / canvas.height, '#ffffff') // White line
+            progressGradient.addColorStop((canvas.height * 0.7 + 3) / canvas.height, '#F6B094') // Bottom color
+            progressGradient.addColorStop(1, '#F6B094') // Bottom color
+            return progressGradient
+        }, [])
+    }
+
 
     const { wavesurfer, isPlaying, currentTime } = useWavesurfer({
         container: trackRef,
         height: 150,
-        waveColor: gradient,
-        progressColor: progressGradient,
+        waveColor: gradient || 'rgba(0, 0, 0, 0.75)',
+        progressColor: progressGradient || 'rgba(0, 0, 0, 0.75)',
         url: `/api?audio=${audio}`,
         barWidth: 2,
     })
@@ -81,7 +87,7 @@ export default function DetailTrackPage() {
     //
 
     return (
-        <Container maxWidth="xl">
+        <Container maxWidth="xl" sx={{ marginTop: '50px' }}>
             <Box ref={trackRef} sx={{
                 position: 'relative',
                 cursor: 'pointer',
