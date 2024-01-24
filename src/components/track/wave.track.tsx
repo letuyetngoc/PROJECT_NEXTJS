@@ -182,9 +182,8 @@ export default function DetailTrackPage() {
                             {
                                 arrComments.map(comment => {
                                     return (
-                                        <Tooltip title="Just a comment" arrow>
+                                        <Tooltip key={comment.id} title="Just a comment" arrow>
                                             <Box
-                                                key={comment.id}
                                                 sx={{
                                                     position: "absolute",
                                                     height: "30px",
