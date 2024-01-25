@@ -18,10 +18,9 @@ import InputBase from '@mui/material/InputBase';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation'
 import { useRouter } from 'next/navigation';
-import { useSession } from 'next-auth/react';
+import { signIn, signOut, useSession } from 'next-auth/react';
 
 const pages = [{ name: 'Playlist', link: 'playlist' }, { name: 'Likes', link: 'like' }, { name: 'Upload', link: 'upload' }];
-const settings = [{ name: 'Profile', link: 'profile' }, { name: 'Account', link: 'account' }, { name: 'Dashboard', link: 'dashboard' }, { name: 'Logout', link: 'logout' }];
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -215,27 +214,36 @@ function AppHeader() {
                   open={Boolean(anchorElUser)}
                   onClose={handleCloseUserMenu}
                 >
-                  {settings.map((setting) => (
-                    <MenuItem key={setting.name} onClick={handleCloseUserMenu}>
-                      <Typography textAlign="center">
-                        <Link
-                          href={`/${setting.link}`}
-                          style={{ textDecoration: pathname === `/${setting.link}` ? 'underline' : 'none', color: pathname === `/${setting.link}` ? '#f50' : 'initial' }}
-                        >
-                          {setting.name}
-                        </Link>
-                      </Typography>
-                    </MenuItem>
-                  ))}
+                  <MenuItem onClick={handleCloseUserMenu}>
+                    <Typography textAlign="center">
+                      <Link
+                        href={`/profile`}
+                        style={{ textDecoration: pathname === `/profile` ? 'underline' : 'none', color: pathname === `/profile` ? '#f50' : 'initial' }}
+                      >
+                        Profile
+                      </Link>
+                    </Typography>
+                  </MenuItem>
+                  <MenuItem
+                    onClick={() => {
+                      handleCloseUserMenu
+                      signOut()
+                    }}
+                  >
+                    <Typography textAlign="center">
+                      Logout
+                    </Typography>
+                  </MenuItem>
                 </Menu>
               </Box>
               :
-              <Link
-                href={`/api/auth/signin`}
-                style={{ textDecoration: 'none', color: '#fff' }}
+              <Button
+                variant="text"
+                style={{ color: '#fff' }}
+                onClick={() => signIn()}
               >
                 LOGIN
-              </Link>
+              </Button>
           }
           {/* ---------- end icon avatar ---------- */}
         </Toolbar>
