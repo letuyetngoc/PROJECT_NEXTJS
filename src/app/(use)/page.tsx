@@ -3,7 +3,7 @@ import { sendRequest } from '@/utils/api';
 import { Container } from '@mui/material';
 import { getServerSession } from 'next-auth';
 import * as React from 'react';
-import { authOptions } from './api/auth/[...nextauth]/route';
+import { authOptions } from '../api/auth/[...nextauth]/route';
 
 export default async function HomePage() {
 
