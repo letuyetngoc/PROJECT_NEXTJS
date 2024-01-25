@@ -72,6 +72,7 @@ function AppHeader() {
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
 
   const { data: session } = useSession()
+  console.log('check session ==>', session)
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
