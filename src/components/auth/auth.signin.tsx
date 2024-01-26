@@ -13,14 +13,17 @@ import GoogleIcon from '@mui/icons-material/Google';
 import { useState } from 'react';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { signIn } from 'next-auth/react';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import { useRouter } from 'next/navigation'
 
 interface IUserInfo {
     email: string
     password: string,
 }
 export default function AuthSignIn() {
+    const router = useRouter()
     const [showPassword, setShowPassword] = useState(false);
-    
+
     const [userInfo, setUserInfo] = useState<IUserInfo>({ email: '', password: '' })
     const [isUserError, setIsUserError] = useState<{ email: boolean, password: boolean }>({ email: false, password: false })
     const [userError, setUserError] = useState<IUserInfo>({ email: '', password: '' })
@@ -35,27 +38,30 @@ export default function AuthSignIn() {
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
 
-        setIsUserError({email: false, password: false })
+        setIsUserError({ email: false, password: false })
         setUserError({ email: '', password: '' })
 
         if (!userInfo.email) {
-            setIsUserError(isUserError=>({...isUserError, email: true}));
-            setUserError(userError => ({...userError, email: 'Email is not empty!'}));
+            setIsUserError(isUserError => ({ ...isUserError, email: true }));
+            setUserError(userError => ({ ...userError, email: 'Email is not empty!' }));
             return;
-        } 
+        }
 
         if (!userInfo.password) {
-            setIsUserError(isUserError=>({...isUserError, password: true}));
-            setUserError(userError => ({...userError, password: 'Password is not empty!'}));
+            setIsUserError(isUserError => ({ ...isUserError, password: true }));
+            setUserError(userError => ({ ...userError, password: 'Password is not empty!' }));
             return;
-        } 
-        
+        }
+
         console.log('userInfo====>', userInfo)
     }
     return (
         <Container component="main" maxWidth="xs" sx={{ height: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
             <CssBaseline />
             <Paper elevation={3} sx={{ p: 3 }}>
+                <IconButton onClick={() => router.push('/')}>
+                    <ArrowBackIcon />
+                </IconButton>
                 <Box
                     sx={{
                         display: 'flex',
@@ -121,9 +127,13 @@ export default function AuthSignIn() {
                 <Divider>
                     Or using
                 </Divider>
-                <Box sx={{ textAlign: 'center', marginTop: '10px' }}>
-                    <IconButton color='info' size="small" onClick={()=>signIn("github")}><GitHubIcon /></IconButton>
-                    <IconButton color='info' size="small"><GoogleIcon /></IconButton>
+                <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'cente', marginTop: '10px' }}>
+                    <Avatar sx={{ m: 1, bgcolor: 'orange' }}>
+                        <IconButton sx={{ color: '#fff' }} size="small" onClick={() => signIn("github")}><GitHubIcon /></IconButton>
+                    </Avatar>
+                    <Avatar sx={{ m: 1, bgcolor: 'orange' }}>
+                        <IconButton sx={{ color: '#fff' }} size="small"><GoogleIcon /></IconButton>
+                    </Avatar>
                 </Box>
             </Paper>
         </Container>
