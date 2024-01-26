@@ -7,7 +7,7 @@ import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
-import { Divider, IconButton, InputAdornment, Paper } from '@mui/material';
+import { Alert, Divider, IconButton, InputAdornment, Paper, Snackbar } from '@mui/material';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import GoogleIcon from '@mui/icons-material/Google';
 import { useState } from 'react';
@@ -15,6 +15,7 @@ import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { signIn } from 'next-auth/react';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useRouter } from 'next/navigation'
+import { error } from 'console';
 
 interface IUserInfo {
     email: string
@@ -22,7 +23,9 @@ interface IUserInfo {
 }
 export default function AuthSignIn() {
     const router = useRouter()
-    const [showPassword, setShowPassword] = useState(false);
+    const [showPassword, setShowPassword] = useState<boolean>(false);
+    const [openNotify, setOpenNotify] = useState<boolean>(false);
+    const [messageInfo, setMessageInfo] = useState<string>('');
 
     const [userInfo, setUserInfo] = useState<IUserInfo>({ email: '', password: '' })
     const [isUserError, setIsUserError] = useState<{ email: boolean, password: boolean }>({ email: false, password: false })
@@ -35,7 +38,7 @@ export default function AuthSignIn() {
         })
     }
 
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
 
         setIsUserError({ email: false, password: false })
@@ -53,7 +56,17 @@ export default function AuthSignIn() {
             return;
         }
 
-        console.log('userInfo====>', userInfo)
+        const res = await signIn("credentials", {
+            username: userInfo.email,
+            password: userInfo.password,
+            redirect: false
+        })
+        if (res?.error !== null) {
+            setOpenNotify(true)
+            setMessageInfo(res?.error || '')
+        } else {
+            router.push('/')
+        }
     }
     return (
         <Container component="main" maxWidth="xs" sx={{ height: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
@@ -136,6 +149,22 @@ export default function AuthSignIn() {
                     </Avatar>
                 </Box>
             </Paper>
+            <Snackbar
+                anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+                autoHideDuration={6000}
+                open={openNotify}
+                onClose={() => setOpenNotify(false)}
+                message={'Error'}
+
+            >
+                <Alert
+                    onClose={()=>setOpenNotify(false)}
+                    severity="error"
+                    sx={{ width: '100%' }}
+                >
+                    {messageInfo}
+                </Alert>
+            </Snackbar>
         </Container>
     );
 }
