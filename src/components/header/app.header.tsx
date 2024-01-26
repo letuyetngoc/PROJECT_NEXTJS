@@ -18,7 +18,7 @@ import InputBase from '@mui/material/InputBase';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation'
 import { useRouter } from 'next/navigation';
-import { signIn, signOut, useSession } from 'next-auth/react';
+import { signOut, useSession } from 'next-auth/react';
 
 const pages = [{ name: 'Playlist', link: 'playlist' }, { name: 'Likes', link: 'like' }, { name: 'Upload', link: 'upload' }];
 
@@ -238,13 +238,12 @@ function AppHeader() {
                 </Menu>
               </Box>
               :
-              <Button
-                variant="text"
-                style={{ color: '#fff' }}
-                onClick={() => signIn()}
+              <Link
+              href={'/auth/signin'}
+                style={{ color: '#fff', textDecoration:'none' }}
               >
                 LOGIN
-              </Button>
+              </Link>
           }
           {/* ---------- end icon avatar ---------- */}
         </Toolbar>

@@ -12,6 +12,7 @@ import GitHubIcon from '@mui/icons-material/GitHub';
 import GoogleIcon from '@mui/icons-material/Google';
 import { useState } from 'react';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
+import { signIn } from 'next-auth/react';
 
 interface IUserInfo {
     email: string
@@ -121,7 +122,7 @@ export default function AuthSignIn() {
                     Or using
                 </Divider>
                 <Box sx={{ textAlign: 'center', marginTop: '10px' }}>
-                    <IconButton color='info' size="small"><GitHubIcon /></IconButton>
+                    <IconButton color='info' size="small" onClick={()=>signIn("github")}><GitHubIcon /></IconButton>
                     <IconButton color='info' size="small"><GoogleIcon /></IconButton>
                 </Box>
             </Paper>
