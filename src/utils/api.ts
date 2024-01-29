@@ -18,6 +18,7 @@ export const sendRequest = async < T > (props: IRequest) => {
         body: body ? JSON.stringify(body) : null,
         ...nextOption
     };
+    //useCredentials help us can send cookie from client to server
     if (useCredentials) options.credentials = "include";
 
     if (queryParams) {

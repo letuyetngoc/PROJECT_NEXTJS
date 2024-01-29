@@ -18,9 +18,9 @@ import InputBase from '@mui/material/InputBase';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation'
 import { useRouter } from 'next/navigation';
+import { signOut, useSession } from 'next-auth/react';
 
 const pages = [{ name: 'Playlist', link: 'playlist' }, { name: 'Likes', link: 'like' }, { name: 'Upload', link: 'upload' }];
-const settings = [{ name: 'Profile', link: 'profile' }, { name: 'Account', link: 'account' }, { name: 'Dashboard', link: 'dashboard' }, { name: 'Logout', link: 'logout' }];
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -70,6 +70,9 @@ function AppHeader() {
   const router = useRouter()
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
+
+  const { data: session } = useSession()
+  console.log('check session ==>', session)
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
@@ -167,61 +170,81 @@ function AppHeader() {
             {/* ---------- end search bar ---------- */}
 
             {/* ---------- menu item ---------- */}
-            <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, justifyContent: 'end', mr: 2 }}>
-              {pages.map((page) => (
-                <Button
-                  key={page.name}
-                  onClick={handleCloseNavMenu}
-                  sx={{ my: 2, color: 'white', display: 'block' }}
-                >
-                  <Link
-                    href={`/${page.link}`}
-                    style={{ textDecoration: pathname === `/${page.link}` ? 'underline' : 'none', color: pathname === `/${page.link}` ? '#f50' : '#ccc' }}
+            {session &&
+              <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, justifyContent: 'end', mr: 2 }}>
+                {pages.map((page) => (
+                  <Button
+                    key={page.name}
+                    onClick={handleCloseNavMenu}
+                    sx={{ my: 2, color: 'white', display: 'block' }}
                   >
-                    {page.name}
-                  </Link>
-                </Button>
-              ))}
-            </Box>
+                    <Link
+                      href={`/${page.link}`}
+                      style={{ textDecoration: pathname === `/${page.link}` ? 'underline' : 'none', color: pathname === `/${page.link}` ? '#f50' : '#fff' }}
+                    >
+                      {page.name}
+                    </Link>
+                  </Button>
+                ))}
+              </Box>
+            }
             {/* ---------- end menu item ---------- */}
           </Box>
           {/* ---------- icon avatar ---------- */}
-          <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title="Open settings">
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
-              </IconButton>
-            </Tooltip>
-            <Menu
-              sx={{ mt: '45px' }}
-              id="menu-appbar"
-              anchorEl={anchorElUser}
-              anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
-            >
-              {settings.map((setting) => (
-                <MenuItem key={setting.name} onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center">
-                    <Link
-                      href={`/${setting.link}`}
-                      style={{ textDecoration: pathname === `/${setting.link}` ? 'underline' : 'none', color: pathname === `/${setting.link}` ? '#f50' : 'initial' }}
-                    >
-                      {setting.name}
-                    </Link>
-                  </Typography>
-                </MenuItem>
-              ))}
-            </Menu>
-          </Box>
+          {
+            session ?
+              <Box sx={{ flexGrow: 0 }}>
+                <Tooltip title="Open settings">
+                  <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                    <Avatar alt="Remy Sharp" src={session?.user?.image} />
+                  </IconButton>
+                </Tooltip>
+                <Menu
+                  sx={{ mt: '45px' }}
+                  id="menu-appbar"
+                  anchorEl={anchorElUser}
+                  anchorOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                  }}
+                  keepMounted
+                  transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                  }}
+                  open={Boolean(anchorElUser)}
+                  onClose={handleCloseUserMenu}
+                >
+                  <MenuItem onClick={handleCloseUserMenu}>
+                    <Typography textAlign="center">
+                      <Link
+                        href={`/profile`}
+                        style={{ textDecoration: pathname === `/profile` ? 'underline' : 'none', color: pathname === `/profile` ? '#f50' : 'initial' }}
+                      >
+                        Profile
+                      </Link>
+                    </Typography>
+                  </MenuItem>
+                  <MenuItem
+                    onClick={() => {
+                      handleCloseUserMenu
+                      signOut()
+                    }}
+                  >
+                    <Typography textAlign="center">
+                      Logout
+                    </Typography>
+                  </MenuItem>
+                </Menu>
+              </Box>
+              :
+              <Link
+              href={'/auth/signin'}
+                style={{ color: '#fff', textDecoration:'none' }}
+              >
+                LOGIN
+              </Link>
+          }
           {/* ---------- end icon avatar ---------- */}
         </Toolbar>
       </Container>
