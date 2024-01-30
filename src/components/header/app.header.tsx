@@ -20,7 +20,7 @@ import { usePathname } from 'next/navigation'
 import { useRouter } from 'next/navigation';
 import { signOut, useSession } from 'next-auth/react';
 
-const pages = [{ name: 'Playlist', link: 'playlist' }, { name: 'Likes', link: 'like' }, { name: 'Upload', link: 'upload' }];
+const pages = [{ name: 'Playlist', link: 'playlist' }, { name: 'Likes', link: 'like' }, { name: 'Upload', link: 'track/upload' }];
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
