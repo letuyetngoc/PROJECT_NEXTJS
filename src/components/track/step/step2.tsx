@@ -27,24 +27,15 @@ function LinearProgressWithLabel(props: LinearProgressProps & { value: number })
         </Box>
     );
 }
-
-export default function Step2() {
-    const [progress, setProgress] = useState(10);
-
-    useEffect(() => {
-        const timer = setInterval(() => {
-            setProgress((prevProgress) => (prevProgress >= 100 ? 10 : prevProgress + 10));
-        }, 800);
-        return () => {
-            clearInterval(timer);
-        };
-    }, []);
-
-    
+interface IProps {
+    uploadTrack: { fileName: string, percent: number }
+}
+export default function Step2(props: IProps) {
+    const { uploadTrack } = props
     return (
         <>
-            <Typography component="p">Your uploading track:</Typography>
-            <LinearProgressWithLabel value={progress} />
+            <Typography component="p">{uploadTrack.fileName || 'Your uploading track:'}</Typography>
+            <LinearProgressWithLabel value={uploadTrack.percent} />
             <Grid container spacing={2} sx={{ mt: 2 }}>
                 <Grid item xs={4} >
                     <CardMedia
@@ -78,9 +69,9 @@ export default function Step2() {
                             <MenuItem value="">
                                 <em>None</em>
                             </MenuItem>
-                            <MenuItem value={10}>Ten</MenuItem>
-                            <MenuItem value={20}>Twenty</MenuItem>
-                            <MenuItem value={30}>Thirty</MenuItem>
+                            <MenuItem>Ten</MenuItem>
+                            <MenuItem>Twenty</MenuItem>
+                            <MenuItem>Thirty</MenuItem>
                         </Select>
                     </FormControl>
                     <Button variant="outlined" sx={{ mt: 3 }}>Save</Button>

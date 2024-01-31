@@ -41,8 +41,13 @@ function a11yProps(index: number) {
         'aria-controls': `simple-tabpanel-${index}`,
     };
 }
-
+interface IUploadTrack {
+    fileName: string;
+    percent: number;
+}
 export default function UploadTrack() {
+    const [uploadTrack, setUploadTrack] = useState<IUploadTrack>({ fileName: '', percent: 0 })
+
     const [value, setValue] = useState(0);
     const handleChange = (event: React.SyntheticEvent, newValue: number) => {
         setValue(newValue);
@@ -58,10 +63,10 @@ export default function UploadTrack() {
                     </Tabs>
                 </Box>
                 <CustomTabPanel value={value} index={0}>
-                    <Step1 />
+                    <Step1 setUploadTrack={setUploadTrack} setValue={setValue} />
                 </CustomTabPanel>
                 <CustomTabPanel value={value} index={1}>
-                    <Step2 />
+                    <Step2 uploadTrack={uploadTrack} />
                 </CustomTabPanel>
             </Box>
         </Container>
