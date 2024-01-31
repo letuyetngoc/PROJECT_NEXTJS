@@ -1,9 +1,8 @@
 'use client'
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
-import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Container } from '@mui/material';
 import Step1 from './step/step1';
 import Step2 from './step/step2';
@@ -28,7 +27,7 @@ function CustomTabPanel(props: TabPanelProps) {
         >
             {value === index && (
                 <Box sx={{ p: 3 }}>
-                    <Typography>{children}</Typography>
+                    {children}
                 </Box>
             )}
         </div>
@@ -52,21 +51,20 @@ export default function UploadTrack() {
     const handleChange = (event: React.SyntheticEvent, newValue: number) => {
         setValue(newValue);
     };
-
     return (
         <Container maxWidth="md" sx={{ border: '1px solid #ccc', marginTop: '30px' }}>
             <Box sx={{ width: '100%' }}>
                 <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                     <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
-                        <Tab label="TRACKS" {...a11yProps(0)} />
-                        <Tab label="BASIC INFORMATION" {...a11yProps(1)} />
+                        <Tab disabled={value !== 0} label="TRACKS" {...a11yProps(0)} />
+                        <Tab disabled={value !== 1} label="BASIC INFORMATION" {...a11yProps(1)} />
                     </Tabs>
                 </Box>
                 <CustomTabPanel value={value} index={0}>
                     <Step1 setUploadTrack={setUploadTrack} setValue={setValue} />
                 </CustomTabPanel>
                 <CustomTabPanel value={value} index={1}>
-                    <Step2 uploadTrack={uploadTrack} />
+                    <Step2 uploadTrack={uploadTrack} setValue={setValue}/>
                 </CustomTabPanel>
             </Box>
         </Container>

@@ -56,7 +56,7 @@ export default function Step1(props: IProps) {
                 })
                 if (res.data.statusCode === 201) {
                     setUploadTrack({
-                        fileName: audio.name,
+                        fileName: res.data.data.fileName,
                         percent: 100
                     });
                 }
