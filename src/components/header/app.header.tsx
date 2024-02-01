@@ -196,7 +196,7 @@ function AppHeader() {
               <Box sx={{ flexGrow: 0 }}>
                 <Tooltip title="Open settings">
                   <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                    <Avatar alt="Remy Sharp" src={session?.user?.image} />
+                    <Avatar alt="Remy Sharp" src={''} />
                   </IconButton>
                 </Tooltip>
                 <Menu
@@ -218,7 +218,7 @@ function AppHeader() {
                   <MenuItem onClick={handleCloseUserMenu}>
                     <Typography textAlign="center">
                       <Link
-                        href={`/profile`}
+                        href={`/profile/${session?.user?._id}`}
                         style={{ textDecoration: pathname === `/profile` ? 'underline' : 'none', color: pathname === `/profile` ? '#f50' : 'initial' }}
                       >
                         Profile

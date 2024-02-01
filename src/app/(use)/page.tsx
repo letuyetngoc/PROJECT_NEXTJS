@@ -28,7 +28,7 @@ export default async function HomePage() {
   })
 
   return (
-    <Container maxWidth="xl" sx={{marginBottom:'200px'}}>
+    <Container maxWidth="xl">
       <MainContent data={chill?.data ?? []} title='CHILL' />
       <MainContent data={workouts?.data ?? []} title='WORKOUT' />
       <MainContent data={party?.data ?? []} title='PARTY' />
