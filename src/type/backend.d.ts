@@ -50,4 +50,12 @@ declare global {
         result: T[]
     }
 
+    interface IShareTrack extends ITrackTop {
+        isPlaying: boolean;
+    }
+    interface ITrackContext {
+        trackInfo: IShareTrack
+        setTrackInfo: React.Dispatch<SetStateAction<IShareTrack>>
+    }
+
 }
