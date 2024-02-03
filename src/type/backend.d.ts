@@ -4,7 +4,7 @@ declare global {
 
     interface ITrackTop {
         '_id': string;
-        'title': atring;
+        'title': tring;
         'description': string;
         'category': string;
         'imgUrl': string;
@@ -48,6 +48,14 @@ declare global {
             total: number;
         },
         result: T[]
+    }
+
+    interface IShareTrack extends ITrackTop {
+        isPlaying: boolean;
+    }
+    interface ITrackContext {
+        trackInfo: IShareTrack
+        setTrackInfo: React.Dispatch<SetStateAction<IShareTrack>>
     }
 
 }

@@ -1,20 +1,18 @@
 'use client'
-import React, { useCallback, useEffect, useMemo, useRef } from 'react'
-import { useSearchParams } from 'next/navigation'
+import React, { useCallback, useContext, useEffect, useMemo, useRef } from 'react'
 import { useWavesurfer } from '@wavesurfer/react'
-import { Box, Container, IconButton, Tooltip } from '@mui/material'
+import { Box, CardMedia, Container, IconButton, Tooltip } from '@mui/material'
 import PlayCircleIcon from '@mui/icons-material/PlayCircle';
 import PauseCircleIcon from '@mui/icons-material/PauseCircle';
+import { TrackContext } from '@/lib/track.wrapper';
 
-export default function DetailTrackPage() {
-
+export default function DetailTrackPage({ track }: { track: ITrackTop }) {
     const trackRef = useRef<HTMLDivElement>(null)
     const durationRef = useRef<HTMLDivElement>(null)
     const hoverRef = useRef<HTMLDivElement>(null)
     const timeRef = useRef<HTMLDivElement>(null)
 
-    const searchParams = useSearchParams()
-    const audio = searchParams.get('audio')
+    const { trackInfo, setTrackInfo } = useContext(TrackContext);
 
     let gradient, progressGradient
 
@@ -53,7 +51,7 @@ export default function DetailTrackPage() {
         height: 70,
         waveColor: gradient || 'rgba(0, 0, 0, 0.75)',
         progressColor: progressGradient || 'rgba(0, 0, 0, 0.75)',
-        url: `/api?audio=${audio}`,
+        url: `/api?audio=${track.trackUrl}`,
         barWidth: 3,
     })
 
@@ -64,6 +62,13 @@ export default function DetailTrackPage() {
         }
         trackRef.current!.addEventListener('pointermove', handlePointerMove)
     }, [])
+
+    useEffect(() => {
+        if (track._id === trackInfo._id && wavesurfer) {
+            trackInfo.isPlaying ? wavesurfer.play() : wavesurfer.pause()
+        }
+        console.log('trackInfo.isPlaying', trackInfo.isPlaying)
+    }, [trackInfo])
 
     const onPlayPause = useCallback(() => {
         wavesurfer && wavesurfer.playPause()
@@ -89,21 +94,21 @@ export default function DetailTrackPage() {
     const arrComments = [
         {
             id: 1,
-            avatar: "http://localhost:8000/images/chill1.png",
+            avatar: "http://localhost:8001/images/chill1.png",
             moment: 10,
             user: "username 1",
             content: "just a comment1"
         },
         {
             id: 2,
-            avatar: "http://localhost:8000/images/chill1.png",
+            avatar: "http://localhost:8001/images/chill1.png",
             moment: 30,
             user: "username 2",
             content: "just a comment3"
         },
         {
             id: 3,
-            avatar: "http://localhost:8000/images/chill1.png",
+            avatar: "http://localhost:8001/images/chill1.png",
             moment: 50,
             user: "username 3",
             content: "just a comment3"
@@ -125,12 +130,15 @@ export default function DetailTrackPage() {
                 }}>
                     <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', flexGrow: '1' }}>
                         <Box sx={{ display: 'flex' }}>
-                            <IconButton sx={{ color: '#f50', padding: 0, paddingRight: '10px', display: 'flex', alignItems: 'flex-start' }} onClick={onPlayPause}>
+                            <IconButton sx={{ color: '#f50', padding: 0, paddingRight: '10px', display: 'flex', alignItems: 'flex-start' }} onClick={() => {
+                                onPlayPause()
+                                setTrackInfo({ ...track, isPlaying: wavesurfer?.isPlaying() })
+                            }}>
                                 {isPlaying ? <PauseCircleIcon sx={{ fontSize: '40px' }} /> : <PlayCircleIcon sx={{ fontSize: '40px' }} />}
                             </IconButton >
                             <Box sx={{ color: '#fff' }}>
-                                <Box px={1} sx={{ fontSize: '20px', background: "#333", marginBottom: '10px', width: 'fit-content' }}>Noi nay co anh</Box>
-                                <Box px={1} sx={{ fontSize: '13px', background: "#333", width: 'fit-content' }}>Son Tung</Box>
+                                <Box px={1} sx={{ fontSize: '20px', background: "#333", marginBottom: '10px', width: 'fit-content' }}>{track.title}</Box>
+                                <Box px={1} sx={{ fontSize: '13px', background: "#333", width: 'fit-content' }}>{track.description}</Box>
                             </Box>
                         </Box>
                         <Box ref={trackRef} sx={{
@@ -211,8 +219,12 @@ export default function DetailTrackPage() {
                         </Box>
                     </Box>
                     <Box sx={{ display: 'flex', alignItems: 'center', padding: '20px' }}>
-                        <Box sx={{ width: '200px', height: '200px', background: '#ccc' }}>
-                        </Box>
+                        <CardMedia
+                            component="img"
+                            sx={{ width: 200, height: 200 }}
+                            image={`${process.env.NEXT_PUBLIC_BACKEND_URL}/images/${track.imgUrl}`}
+                            alt="track image"
+                        />
                     </Box>
                 </Box>
             </Box>

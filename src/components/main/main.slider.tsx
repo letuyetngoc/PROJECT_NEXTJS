@@ -24,7 +24,7 @@ function SampleNextArrow(props: any) {
                 minWidth: '30px !important',
                 height: '30px !important',
                 transform: 'translateY(-50%)',
-                right: '15px',
+                right: '-15px',
                 background: '#ffffff',
                 padding: 0
             }}
@@ -68,7 +68,7 @@ interface IMainContent {
 export default function MainContent(props: IMainContent) {
     const settings: Settings = {
         dots: false,
-        infinite: false,
+        infinite: true,
         speed: 500,
         slidesToShow: 5,
         slidesToScroll: 1,
@@ -139,7 +139,7 @@ interface ITrackItem {
 }
 function TrackItem(props: ITrackItem) {
     return (
-        <Card sx={{ maxWidth: 200, cursor: 'pointer' }}>
+        <Card sx={{ maxWidth: 200, cursor: 'pointer'}}>
             <CardMedia
                 component="img"
                 height="150"
@@ -147,7 +147,7 @@ function TrackItem(props: ITrackItem) {
                 alt="track image"
             />
             <CardContent>
-                <Link href={`track/${props.track._id}?audio=${props.track.trackUrl}`}>
+                <Link href={`track/${props.track._id}?audio=${props.track.trackUrl}&id=${props.track._id}`}>
                     <Typography variant="h6" color="text.secondary"
                         sx={{
                             overflow: 'hidden',
