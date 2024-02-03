@@ -1,9 +1,15 @@
 import DetailTrackPage from '@/components/track/wave.track'
-import { Container } from '@mui/material'
+import { sendRequest } from '@/utils/api'
 import React from 'react'
 
-export default function TrackPageDetail({ params }: { params: { slug: string } }) {
+export default async function TrackPageDetail({ params }: { params: { slug: string } }) {
+
+  const track = await sendRequest<IBackendRes<ITrackTop>>({
+    url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tracks/${params.slug}`,
+    method: 'GET',
+  })
+
   return (
-      <DetailTrackPage/>
+    <DetailTrackPage track={track.data!} />
   )
 }

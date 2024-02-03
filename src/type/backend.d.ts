@@ -4,7 +4,7 @@ declare global {
 
     interface ITrackTop {
         '_id': string;
-        'title': atring;
+        'title': tring;
         'description': string;
         'category': string;
         'imgUrl': string;

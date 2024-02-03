@@ -37,8 +37,8 @@ export default function AppFooter() {
                     ref={audioRef}
                 />
                 <Box sx={{ minWidth: '10%', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
-                    <Typography variant='body2' sx={{ fontSize: '12px', color: '#868686' }}>Ngoc Le</Typography>
-                    <Typography variant='body2' sx={{ fontSize: '16px', color: '#000' }}>Who Iam I</Typography>
+                    <Typography variant='body2' sx={{ fontSize: '12px', color: '#868686' }}>{trackInfo.title}</Typography>
+                    <Typography variant='body2' sx={{cursor:'pointer', fontSize: '16px', color: '#000' }}>{trackInfo.description}</Typography>
                 </Box>
             </Container>
         </AppBar >
