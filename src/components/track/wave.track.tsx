@@ -6,7 +6,7 @@ import PlayCircleIcon from '@mui/icons-material/PlayCircle';
 import PauseCircleIcon from '@mui/icons-material/PauseCircle';
 import { TrackContext } from '@/lib/track.wrapper';
 
-export default function DetailTrackPage({ track }: { track: ITrackTop }) {
+export default function DetailTrackPage({ track, comments }: { track: ITrackTop, comments: IComment[] }) {
     const trackRef = useRef<HTMLDivElement>(null)
     const durationRef = useRef<HTMLDivElement>(null)
     const hoverRef = useRef<HTMLDivElement>(null)
@@ -91,29 +91,6 @@ export default function DetailTrackPage({ track }: { track: ITrackTop }) {
     }, [wavesurfer])
     //
 
-    const arrComments = [
-        {
-            id: 1,
-            avatar: "http://localhost:8001/images/chill1.png",
-            moment: 10,
-            user: "username 1",
-            content: "just a comment1"
-        },
-        {
-            id: 2,
-            avatar: "http://localhost:8001/images/chill1.png",
-            moment: 30,
-            user: "username 2",
-            content: "just a comment3"
-        },
-        {
-            id: 3,
-            avatar: "http://localhost:8001/images/chill1.png",
-            moment: 50,
-            user: "username 3",
-            content: "just a comment3"
-        },
-    ]
     const calcLeft = (moment: number): number => {
         let duration: number = Number(durationRef.current?.textContent?.replace(':', '.'))
         const left = (moment * (100)) / (duration * 60)
@@ -188,9 +165,9 @@ export default function DetailTrackPage({ track }: { track: ITrackTop }) {
                             </Box>
 
                             {
-                                arrComments.map(comment => {
+                                comments.map(comment => {
                                     return (
-                                        <Tooltip key={comment.id} title="Just a comment" arrow>
+                                        <Tooltip key={comment._id} title={comment.content} arrow>
                                             <Box
                                                 sx={{
                                                     position: "absolute",

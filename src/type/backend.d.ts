@@ -22,6 +22,24 @@ declare global {
         'createdAt': string;
         'updatedAt': string;
     }
+
+    interface IComment {
+        "_id": string,
+        "content": string,
+        "moment": number,
+        "user": {
+            "_id": string,
+            "email": string,
+            "name": string,
+            "role": string,
+            "type": string
+        },
+        "track": string,
+        "isDeleted": boolean,
+        "__v": number,
+        "createdAt": string,
+        "updatedAt": string
+    }
     
     interface IRequest {
         url: string;
