@@ -1,10 +1,11 @@
 'use client'
 import React, { useCallback, useContext, useEffect, useMemo, useRef } from 'react'
 import { useWavesurfer } from '@wavesurfer/react'
-import { Box, CardMedia, Container, IconButton, Tooltip } from '@mui/material'
+import { Avatar, Box, CardMedia, Container, IconButton, Tooltip } from '@mui/material'
 import PlayCircleIcon from '@mui/icons-material/PlayCircle';
 import PauseCircleIcon from '@mui/icons-material/PauseCircle';
 import { TrackContext } from '@/lib/track.wrapper';
+import CommentTrack from './comment.track';
 
 export default function DetailTrackPage({ track, comments }: { track: ITrackTop, comments: IComment[] }) {
     const trackRef = useRef<HTMLDivElement>(null)
@@ -67,7 +68,6 @@ export default function DetailTrackPage({ track, comments }: { track: ITrackTop,
         if (track._id === trackInfo._id && wavesurfer) {
             trackInfo.isPlaying ? wavesurfer.play() : wavesurfer.pause()
         }
-        console.log('trackInfo.isPlaying', trackInfo.isPlaying)
     }, [trackInfo])
 
     const onPlayPause = useCallback(() => {
@@ -84,9 +84,14 @@ export default function DetailTrackPage({ track, comments }: { track: ITrackTop,
 
     useEffect(() => {
         if (wavesurfer) {
-            wavesurfer!.on('decode', (duration) => (durationRef.current!.textContent = formatTime(duration)))
-            wavesurfer!.on('timeupdate', (currentTime) => (timeRef.current!.textContent = formatTime(currentTime)))
+            const subscriptions = [
+            wavesurfer!.on('decode', (duration) => (durationRef.current!.textContent = formatTime(duration))),
+            wavesurfer!.on('timeupdate', (currentTime) => (timeRef.current!.textContent = formatTime(currentTime))),
             wavesurfer.once('interaction', () => wavesurfer.play())
+            ]
+            return () => {
+                subscriptions.forEach((unsub) => unsub())
+            }
         }
     }, [wavesurfer])
     //
@@ -180,14 +185,7 @@ export default function DetailTrackPage({ track, comments }: { track: ITrackTop,
                                                     hoverRef.current!.style.width = `${calcLeft(comment.moment)}%`
                                                 }}
                                             >
-                                                <img
-
-                                                    src='https://picsum.photos/id/1/200/300'
-                                                    width={30}
-                                                    height={30}
-                                                >
-
-                                                </img>
+                                                <Avatar sx={{ width: 24, height: 24 }}>{comment.user.name[0].toUpperCase()}</Avatar>
                                             </Box>
                                         </Tooltip>
                                     )
@@ -205,6 +203,12 @@ export default function DetailTrackPage({ track, comments }: { track: ITrackTop,
                     </Box>
                 </Box>
             </Box>
+            <CommentTrack
+                comments={comments}
+                track={track}
+                // @ts-ignore
+                wavesurfer={wavesurfer}
+            />
         </Container>
     )
 }
