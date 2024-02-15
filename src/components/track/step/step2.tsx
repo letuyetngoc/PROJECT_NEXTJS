@@ -5,6 +5,7 @@ import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { useSession } from 'next-auth/react';
 import axios from 'axios';
 import { useToast } from '@/utils/toast';
+import Image from 'next/image';
 
 const VisuallyHiddenInput = styled('input')({
     clip: 'rect(0 0 0 0)',
@@ -126,11 +127,18 @@ export default function Step2(props: IProps) {
             <Grid container spacing={2} sx={{ mt: 2 }}>
                 <Grid item xs={4} >
                     {imgName ?
-                        <CardMedia
-                            component="img"
-                            sx={{ width: 200, height: 200, mb: 2 }}
-                            image={`${process.env.NEXT_PUBLIC_BACKEND_URL}/images/${imgName}`}
-                            alt="track picture"
+                        // <CardMedia
+                        //     component="img"
+                        //     sx={{ width: 200, height: 200, mb: 2 }}
+                        //     image={`${process.env.NEXT_PUBLIC_BACKEND_URL}/images/${imgName}`}
+                        //     alt="track picture"
+                        // />
+                        <Image
+                            src={`${process.env.NEXT_PUBLIC_BACKEND_URL}/images/${imgName}`}
+                            width={200}
+                            height={200}
+                            alt="track image"
+                            style={{marginBottom:'10px'}}
                         />
                         :
                         <Box sx={{ width: 200, height: 200, mb: 2, background: '#ccc' }}></Box>

@@ -10,6 +10,7 @@ import LikeTrack from './like.track';
 import { sendRequest } from '@/utils/api';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation'
+import Image from 'next/image';
 
 export default function DetailTrackPage({ track, comments }: { track: ITrackTop, comments: IComment[] }) {
     const trackRef = useRef<HTMLDivElement>(null)
@@ -92,9 +93,9 @@ export default function DetailTrackPage({ track, comments }: { track: ITrackTop,
     useEffect(() => {
         if (wavesurfer) {
             const subscriptions = [
-            wavesurfer!.on('decode', (duration) => (durationRef.current!.textContent = formatTime(duration))),
-            wavesurfer!.on('timeupdate', (currentTime) => (timeRef.current!.textContent = formatTime(currentTime))),
-            wavesurfer.once('interaction', () => wavesurfer.play())
+                wavesurfer!.on('decode', (duration) => (durationRef.current!.textContent = formatTime(duration))),
+                wavesurfer!.on('timeupdate', (currentTime) => (timeRef.current!.textContent = formatTime(currentTime))),
+                wavesurfer.once('interaction', () => wavesurfer.play())
             ]
             return () => {
                 subscriptions.forEach((unsub) => unsub())
@@ -109,8 +110,8 @@ export default function DetailTrackPage({ track, comments }: { track: ITrackTop,
         return left
     }
 
-    const handleIncreaseView = async() => {
-        if(viewRef.current){
+    const handleIncreaseView = async () => {
+        if (viewRef.current) {
             const res = await sendRequest<IBackendRes<IModelPaginate<ITrackLike>>>({
                 url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tracks/increase-view`,
                 method: 'POST',
@@ -119,7 +120,7 @@ export default function DetailTrackPage({ track, comments }: { track: ITrackTop,
                 },
                 body: { 'trackId': track._id }
             })
-            if(res.statusCode === 201) {
+            if (res.statusCode === 201) {
                 router.refresh()
             }
             viewRef.current = false
@@ -219,16 +220,22 @@ export default function DetailTrackPage({ track, comments }: { track: ITrackTop,
                         </Box>
                     </Box>
                     <Box sx={{ display: 'flex', alignItems: 'center', padding: '20px' }}>
-                        <CardMedia
+                        {/* <CardMedia
                             component="img"
                             sx={{ width: 200, height: 200 }}
                             image={`${process.env.NEXT_PUBLIC_BACKEND_URL}/images/${track.imgUrl}`}
+                            alt="track image"
+                        /> */}
+                        <Image
+                            src={`${process.env.NEXT_PUBLIC_BACKEND_URL}/images/${track.imgUrl}`}
+                            width={200}
+                            height={200}
                             alt="track image"
                         />
                     </Box>
                 </Box>
             </Box>
-            <LikeTrack track={track}/>
+            <LikeTrack track={track} />
             <CommentTrack
                 comments={comments}
                 track={track}
