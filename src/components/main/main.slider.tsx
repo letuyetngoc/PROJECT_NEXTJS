@@ -9,11 +9,12 @@ import CardMedia from '@mui/material/CardMedia';
 import CardContent from '@mui/material/CardContent';
 import IconButton, { IconButtonProps } from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
-import { Button, Container, Divider } from '@mui/material';
+import { Box, Button, Container, Divider } from '@mui/material';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import Link from 'next/link';
 import { convertSlugUrl } from '@/utils/api';
+import Image from 'next/image';
 
 function SampleNextArrow(props: any) {
     const { onClick } = props;
@@ -140,13 +141,23 @@ interface ITrackItem {
 }
 function TrackItem(props: ITrackItem) {
     return (
-        <Card sx={{ maxWidth: 200, cursor: 'pointer'}}>
-            <CardMedia
+        <Card sx={{ maxWidth: 200, cursor: 'pointer' }}>
+            {/* <CardMedia
                 component="img"
                 height="150"
                 image={`${process.env.NEXT_PUBLIC_BACKEND_URL}/images/${props.track.imgUrl}`}
                 alt="track image"
-            />
+            /> */}
+            <Box sx={{ position: 'relative', width:'100%', height:'180px' }}>
+                <Image
+                    src={`${process.env.NEXT_PUBLIC_BACKEND_URL}/images/${props.track.imgUrl}`}
+                    fill
+                    style={{
+                        objectFit: 'cover',
+                    }}
+                    alt="track image"
+                />
+            </Box>
             <CardContent>
                 <Link href={`track/${convertSlugUrl(props.track.title)}-${props.track._id}.html?audio=${props.track.trackUrl}&id=${props.track._id}`}>
                     <Typography variant="h6" color="text.secondary"

@@ -13,6 +13,7 @@ import { TrackContext } from '@/lib/track.wrapper';
 import PauseIcon from '@mui/icons-material/Pause';
 import { useRouter } from 'next/navigation'
 import { convertSlugUrl } from '@/utils/api';
+import Image from 'next/image';
 
 const ProfileTrackItem = (props: { track: ITrackTop }) => {
     const { track } = props
@@ -56,10 +57,16 @@ const ProfileTrackItem = (props: { track: ITrackTop }) => {
                     </IconButton>
                 </Box>
             </Box>
-            <CardMedia
+            {/* <CardMedia
                 component="img"
                 sx={{ width: 151, height: 151 }}
                 image={`${process.env.NEXT_PUBLIC_BACKEND_URL}/images/${track.imgUrl}`}
+                alt="track image"
+            /> */}
+            <Image
+                src={`${process.env.NEXT_PUBLIC_BACKEND_URL}/images/${track.imgUrl}`}
+                width={151}
+                height={151}
                 alt="track image"
             />
         </Card>
