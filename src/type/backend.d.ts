@@ -22,6 +22,36 @@ declare global {
         'createdAt': string;
         'updatedAt': string;
     }
+
+    interface IComment {
+        "_id": string,
+        "content": string,
+        "moment": number,
+        "user": {
+            "_id": string,
+            "email": string,
+            "name": string,
+            "role": string,
+            "type": string
+        },
+        "track": string,
+        "isDeleted": boolean,
+        "__v": number,
+        "createdAt": string,
+        "updatedAt": string
+    }
+
+    interface INewComment {
+        "content": string,
+        "moment": number,
+        "user": string,
+        "track": string,
+        "isDeleted": boolean,
+        "_id": string,
+        "createdAt": string,
+        "updatedAt": string,
+        "__v": number
+    }
     
     interface IRequest {
         url: string;
@@ -32,7 +62,16 @@ declare global {
         headers?: any;
         nextOption?: any;
     }
-
+    interface ITrackLike {
+        "_id": string,
+        "title": string,
+        "description": string,
+        "category": string,
+        "imgUrl": string,
+        "trackUrl": string,
+        "countLike": number,
+        "countPlay": number
+    }
     interface IBackendRes<T> {
         error?: string | string[];
         message: string;

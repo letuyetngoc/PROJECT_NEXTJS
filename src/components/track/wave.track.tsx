@@ -1,16 +1,24 @@
 'use client'
 import React, { useCallback, useContext, useEffect, useMemo, useRef } from 'react'
 import { useWavesurfer } from '@wavesurfer/react'
-import { Box, CardMedia, Container, IconButton, Tooltip } from '@mui/material'
+import { Avatar, Box, CardMedia, Container, IconButton, Tooltip } from '@mui/material'
 import PlayCircleIcon from '@mui/icons-material/PlayCircle';
 import PauseCircleIcon from '@mui/icons-material/PauseCircle';
 import { TrackContext } from '@/lib/track.wrapper';
+import CommentTrack from './comment.track';
+import LikeTrack from './like.track';
+import { sendRequest } from '@/utils/api';
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation'
 
-export default function DetailTrackPage({ track }: { track: ITrackTop }) {
+export default function DetailTrackPage({ track, comments }: { track: ITrackTop, comments: IComment[] }) {
     const trackRef = useRef<HTMLDivElement>(null)
     const durationRef = useRef<HTMLDivElement>(null)
     const hoverRef = useRef<HTMLDivElement>(null)
     const timeRef = useRef<HTMLDivElement>(null)
+    const viewRef = useRef<boolean>(true)
+    const { data: session } = useSession()
+    const router = useRouter()
 
     const { trackInfo, setTrackInfo } = useContext(TrackContext);
 
@@ -67,7 +75,6 @@ export default function DetailTrackPage({ track }: { track: ITrackTop }) {
         if (track._id === trackInfo._id && wavesurfer) {
             trackInfo.isPlaying ? wavesurfer.play() : wavesurfer.pause()
         }
-        console.log('trackInfo.isPlaying', trackInfo.isPlaying)
     }, [trackInfo])
 
     const onPlayPause = useCallback(() => {
@@ -84,40 +91,39 @@ export default function DetailTrackPage({ track }: { track: ITrackTop }) {
 
     useEffect(() => {
         if (wavesurfer) {
-            wavesurfer!.on('decode', (duration) => (durationRef.current!.textContent = formatTime(duration)))
-            wavesurfer!.on('timeupdate', (currentTime) => (timeRef.current!.textContent = formatTime(currentTime)))
+            const subscriptions = [
+            wavesurfer!.on('decode', (duration) => (durationRef.current!.textContent = formatTime(duration))),
+            wavesurfer!.on('timeupdate', (currentTime) => (timeRef.current!.textContent = formatTime(currentTime))),
             wavesurfer.once('interaction', () => wavesurfer.play())
+            ]
+            return () => {
+                subscriptions.forEach((unsub) => unsub())
+            }
         }
     }, [wavesurfer])
     //
 
-    const arrComments = [
-        {
-            id: 1,
-            avatar: "http://localhost:8001/images/chill1.png",
-            moment: 10,
-            user: "username 1",
-            content: "just a comment1"
-        },
-        {
-            id: 2,
-            avatar: "http://localhost:8001/images/chill1.png",
-            moment: 30,
-            user: "username 2",
-            content: "just a comment3"
-        },
-        {
-            id: 3,
-            avatar: "http://localhost:8001/images/chill1.png",
-            moment: 50,
-            user: "username 3",
-            content: "just a comment3"
-        },
-    ]
     const calcLeft = (moment: number): number => {
         let duration: number = Number(durationRef.current?.textContent?.replace(':', '.'))
         const left = (moment * (100)) / (duration * 60)
         return left
+    }
+
+    const handleIncreaseView = async() => {
+        if(viewRef.current){
+            const res = await sendRequest<IBackendRes<IModelPaginate<ITrackLike>>>({
+                url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tracks/increase-view`,
+                method: 'POST',
+                headers: {
+                    'Authorization': 'Bearer ' + session?.access_token,
+                },
+                body: { 'trackId': track._id }
+            })
+            if(res.statusCode === 201) {
+                router.refresh()
+            }
+            viewRef.current = false
+        }
     }
     return (
         <Container maxWidth="xl" sx={{ marginTop: '50px' }}>
@@ -131,6 +137,7 @@ export default function DetailTrackPage({ track }: { track: ITrackTop }) {
                     <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', flexGrow: '1' }}>
                         <Box sx={{ display: 'flex' }}>
                             <IconButton sx={{ color: '#f50', padding: 0, paddingRight: '10px', display: 'flex', alignItems: 'flex-start' }} onClick={() => {
+                                handleIncreaseView()
                                 onPlayPause()
                                 setTrackInfo({ ...track, isPlaying: wavesurfer?.isPlaying() })
                             }}>
@@ -188,9 +195,9 @@ export default function DetailTrackPage({ track }: { track: ITrackTop }) {
                             </Box>
 
                             {
-                                arrComments.map(comment => {
+                                comments.map(comment => {
                                     return (
-                                        <Tooltip key={comment.id} title="Just a comment" arrow>
+                                        <Tooltip key={comment._id} title={comment.content} arrow>
                                             <Box
                                                 sx={{
                                                     position: "absolute",
@@ -203,14 +210,7 @@ export default function DetailTrackPage({ track }: { track: ITrackTop }) {
                                                     hoverRef.current!.style.width = `${calcLeft(comment.moment)}%`
                                                 }}
                                             >
-                                                <img
-
-                                                    src='https://picsum.photos/id/1/200/300'
-                                                    width={30}
-                                                    height={30}
-                                                >
-
-                                                </img>
+                                                <Avatar sx={{ width: 24, height: 24 }}>{comment?.user?.name[0].toUpperCase()}</Avatar>
                                             </Box>
                                         </Tooltip>
                                     )
@@ -228,6 +228,13 @@ export default function DetailTrackPage({ track }: { track: ITrackTop }) {
                     </Box>
                 </Box>
             </Box>
+            <LikeTrack track={track}/>
+            <CommentTrack
+                comments={comments}
+                track={track}
+                // @ts-ignore
+                wavesurfer={wavesurfer}
+            />
         </Container>
     )
 }

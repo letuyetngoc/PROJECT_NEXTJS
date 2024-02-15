@@ -196,7 +196,7 @@ function AppHeader() {
               <Box sx={{ flexGrow: 0 }}>
                 <Tooltip title="Open settings">
                   <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                    <Avatar alt="Remy Sharp" src={''} />
+                    <Avatar>{session.user.username.slice(0,2).toUpperCase()}</Avatar>
                   </IconButton>
                 </Tooltip>
                 <Menu
@@ -239,8 +239,8 @@ function AppHeader() {
               </Box>
               :
               <Link
-              href={'/auth/signin'}
-                style={{ color: '#fff', textDecoration:'none' }}
+                href={'/auth/signin'}
+                style={{ color: '#fff', textDecoration: 'none' }}
               >
                 LOGIN
               </Link>
