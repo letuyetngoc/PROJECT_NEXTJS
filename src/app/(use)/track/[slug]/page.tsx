@@ -1,6 +1,30 @@
 import DetailTrackPage from '@/components/track/wave.track'
 import { sendRequest } from '@/utils/api'
 import React from 'react'
+import type { Metadata, ResolvingMetadata } from 'next'
+
+type Props = {
+  params: { slug: string }
+}
+export async function generateMetadata(
+  { params }: Props,
+  parent: ResolvingMetadata
+): Promise<Metadata> {
+  // read route params
+  const id = params.slug
+
+  // fetch data
+  const track = await sendRequest<IBackendRes<ITrackTop>>({
+    url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tracks/${params.slug}`,
+    method: 'GET',
+    nextOption: { catche: 'no-store' }
+  })
+
+  return {
+    title: track.data?.title,
+    description: track.data?.description
+  }
+}
 
 export default async function TrackPageDetail({ params }: { params: { slug: string } }) {
 
