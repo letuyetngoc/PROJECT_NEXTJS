@@ -62,7 +62,16 @@ declare global {
         headers?: any;
         nextOption?: any;
     }
-
+    interface ITrackLike {
+        "_id": string,
+        "title": string,
+        "description": string,
+        "category": string,
+        "imgUrl": string,
+        "trackUrl": string,
+        "countLike": number,
+        "countPlay": number
+    }
     interface IBackendRes<T> {
         error?: string | string[];
         message: string;

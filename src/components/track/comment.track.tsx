@@ -1,5 +1,5 @@
 'use client'
-import React, { useReducer, useState } from 'react'
+import React, { Fragment, useState } from 'react'
 import { Avatar, Box, CardMedia, Container, Grid, TextField, Typography } from '@mui/material'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import dayjs from 'dayjs'
@@ -15,7 +15,7 @@ interface ICommentTrack {
 }
 dayjs.extend(relativeTime)
 
-export default function CommentTrack(props: ICommentTrack) {
+const CommentTrack = (props: ICommentTrack) => {
   const { comments, track, wavesurfer } = props
   const route = useRouter()
 
@@ -49,10 +49,10 @@ export default function CommentTrack(props: ICommentTrack) {
     }
   }
 
-  const handleJumTrack = (moment:number) => {
-    if(wavesurfer) {
+  const handleJumTrack = (moment: number) => {
+    if (wavesurfer) {
       const duration = wavesurfer.getDuration()
-      wavesurfer.seekTo(moment/duration)
+      wavesurfer.seekTo(moment / duration)
     }
   }
 
@@ -77,23 +77,26 @@ export default function CommentTrack(props: ICommentTrack) {
           {
             comments.map((comment) => {
               return (
-                <Box mb={2} sx={{ display: 'flex', justifyContent: 'space-between', alignItems: "flex-start" }}>
-                  <Box sx={{ display: 'flex' }}>
-                    <Avatar>{comment.user.name.slice(0, 2).toUpperCase()}</Avatar>
-                    <Box ml={2}>
-                      <Typography variant='caption'>{comment.user.name} at {' '}
-                        <span style={{ cursor: 'pointer' }} onClick={()=>{handleJumTrack(comment.moment)}}>{formatTime(comment.moment)}</span>
-                      </Typography>
-                      <Typography variant='body2'>{comment.content}</Typography>
+                <Fragment key={comment._id}>
+                  <Box mb={2} sx={{ display: 'flex', justifyContent: 'space-between', alignItems: "flex-start" }}>
+                    <Box sx={{ display: 'flex' }}>
+                      <Avatar>{comment?.user?.name.slice(0, 2).toUpperCase()}</Avatar>
+                      <Box ml={2}>
+                        <Typography variant='caption'>{comment?.user?.name} at {' '}
+                          <span style={{ cursor: 'pointer' }} onClick={() => { handleJumTrack(comment.moment) }}>{formatTime(comment.moment)}</span>
+                        </Typography>
+                        <Typography variant='body2'>{comment.content}</Typography>
+                      </Box>
                     </Box>
+                    <Typography variant='caption'>{dayjs(comment.createdAt).fromNow()}</Typography>
                   </Box>
-                  <Typography variant='caption'>{dayjs(comment.createdAt).fromNow()}</Typography>
-                </Box>
-        )
+                </Fragment>
+              )
             })
           }
+        </Grid>
       </Grid>
-    </Grid>
     </Container >
   )
 }
+export default CommentTrack
