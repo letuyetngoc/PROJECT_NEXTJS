@@ -12,6 +12,7 @@ import SkipNextIcon from '@mui/icons-material/SkipNext';
 import { TrackContext } from '@/lib/track.wrapper';
 import PauseIcon from '@mui/icons-material/Pause';
 import { useRouter } from 'next/navigation'
+import { convertSlugUrl } from '@/utils/api';
 
 const ProfileTrackItem = (props: { track: ITrackTop }) => {
     const { track } = props
@@ -23,7 +24,7 @@ const ProfileTrackItem = (props: { track: ITrackTop }) => {
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                 <CardContent sx={{ flex: '1 0 auto' }}>
                     <Typography onClick={() => {
-                        router.push(`/track/${track._id}?audio/${track.trackUrl}&id=${track._id}`)
+                        router.push(`/track/${convertSlugUrl(props.track.title)}-${track._id}?audio/${track.trackUrl}`)
                     }}
                         component="div" variant="h5" sx={{ cursor: 'pointer', '&:hover': { textDecoration: "underline" } }}>
                         {track.title}

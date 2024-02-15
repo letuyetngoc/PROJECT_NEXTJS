@@ -33,9 +33,12 @@ export async function generateMetadata(
 }
 
 export default async function TrackPageDetail({ params }: { params: { slug: string } }) {
+  const temp = params.slug.split('.html')
+  const temp1 = temp[0].split('-')
+  const id = temp1[temp1.length-1]
 
   const track = await sendRequest<IBackendRes<ITrackTop>>({
-    url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tracks/${params.slug}`,
+    url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tracks/${id}`,
     method: 'GET',
     nextOption: { catche: 'no-store' }
   })
@@ -46,7 +49,7 @@ export default async function TrackPageDetail({ params }: { params: { slug: stri
     queryParams: {
       current: 1,
       pageSize: 100,
-      trackId: params.slug,
+      trackId: id,
       sort: '-createdAt'
     }
   })

@@ -13,6 +13,7 @@ import { Button, Container, Divider } from '@mui/material';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import Link from 'next/link';
+import { convertSlugUrl } from '@/utils/api';
 
 function SampleNextArrow(props: any) {
     const { onClick } = props;
@@ -147,7 +148,7 @@ function TrackItem(props: ITrackItem) {
                 alt="track image"
             />
             <CardContent>
-                <Link href={`track/${props.track._id}?audio=${props.track.trackUrl}&id=${props.track._id}`}>
+                <Link href={`track/${convertSlugUrl(props.track.title)}-${props.track._id}.html?audio=${props.track.trackUrl}&id=${props.track._id}`}>
                     <Typography variant="h6" color="text.secondary"
                         sx={{
                             overflow: 'hidden',
