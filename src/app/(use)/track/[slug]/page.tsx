@@ -22,7 +22,13 @@ export async function generateMetadata(
 
   return {
     title: track.data?.title,
-    description: track.data?.description
+    description: track.data?.description,
+    openGraph: {
+      title: track.data?.title,
+      description: track.data?.description,
+      type: 'website',
+      images: [`https://raw.githubusercontent.com/hoidanit/images-hosting/master/eric.png`],
+    },
   }
 }
 
