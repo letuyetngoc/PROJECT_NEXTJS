@@ -2,6 +2,7 @@ import DetailTrackPage from '@/components/track/wave.track'
 import { sendRequest } from '@/utils/api'
 import React from 'react'
 import type { Metadata, ResolvingMetadata } from 'next'
+import { notFound } from 'next/navigation'
 
 type Props = {
   params: { slug: string }
@@ -53,6 +54,10 @@ export default async function TrackPageDetail({ params }: { params: { slug: stri
       sort: '-createdAt'
     }
   })
+
+  if(!track.data){
+    notFound()
+  }
 
   return (
     <DetailTrackPage track={track.data!} comments={comments.data?.result!} />
